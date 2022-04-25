@@ -17,7 +17,7 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(onPressed: () {
             print('Hey');
-          }, icon: Icon(Icons.menu))
+          }, icon: const Icon(Icons.menu))
         ],
       ),
       body: Stack(
@@ -25,11 +25,28 @@ class _HomeState extends State<Home> {
           Center(
             child: Image.asset(
               'assets/umbrella.png',
+              height: 900.0,
               fit: BoxFit.fill,
+            ),
+          ),
+          Container(
+            alignment: Alignment.topRight,
+            margin: const EdgeInsets.fromLTRB(0.0 ,10.9, 20.9,0.0),
+            child: Text(
+              'Spokane',
+              style: cityStyle(),
             ),
           )
         ],
       )
     );
   }
+}
+
+TextStyle cityStyle() {
+  return const TextStyle(
+    color: Colors.white,
+    fontSize: 22.9,
+    fontStyle: FontStyle.italic
+  );
 }
