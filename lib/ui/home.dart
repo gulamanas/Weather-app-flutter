@@ -12,7 +12,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Weather App'),
+        title: const Text('Weather App'),
+        centerTitle: true,
         backgroundColor: Colors.redAccent,
         actions: [
           IconButton(onPressed: () {
@@ -36,6 +37,18 @@ class _HomeState extends State<Home> {
               'Spokane',
               style: cityStyle(),
             ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            child: Image.asset('assets/light_rain.png'),
+          ),
+          Container(
+            // alignment: Alignment.center,
+            margin: const EdgeInsets.fromLTRB(80.0, 480.0, 0.0, 0.0),
+            child: Text(
+              '64.9F',
+              style: weatherStyle(),
+            ),
           )
         ],
       )
@@ -48,5 +61,13 @@ TextStyle cityStyle() {
     color: Colors.white,
     fontSize: 22.9,
     fontStyle: FontStyle.italic
+  );
+}
+TextStyle weatherStyle() {
+  return const TextStyle(
+    color: Colors.white,
+    fontSize: 49.9,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w500
   );
 }
