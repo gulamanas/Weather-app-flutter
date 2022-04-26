@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import '../util/utils.dart' as util;
+import 'dart:async';
 
 class Home extends StatefulWidget {
   const Home({ Key? key }) : super(key: key);
@@ -8,6 +13,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  void getStuff() async {
+    Map data = await getWeather(util.defaultCity);
+    print(data);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,9 +27,8 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         backgroundColor: Colors.redAccent,
         actions: [
-          IconButton(onPressed: () {
-            print('Hey');
-          }, icon: const Icon(Icons.menu))
+          IconButton(onPressed: getStuff,
+           icon: const Icon(Icons.menu))
         ],
       ),
       body: Stack(
@@ -54,6 +64,18 @@ class _HomeState extends State<Home> {
       )
     );
   }
+
+  Future<Map> getWeather( String city) async {
+    String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=$city&appid=${util.appId}";
+
+    Response response = await get(Uri.parse(apiUrl));
+
+    // print(response.body);
+    return jsonDecode(response.body);
+    
+  }
+
+
 }
 
 TextStyle cityStyle() {
