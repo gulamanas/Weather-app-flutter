@@ -4,7 +4,7 @@ import 'package:weather_api/ui/home.dart';
 
 Future main() async {
   await dotenv.load(fileName: 'dotenv');
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
     home: Home(),
   ));
 }
