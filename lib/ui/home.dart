@@ -5,16 +5,36 @@ import 'dart:convert';
 import 'dart:async';
 
 class Home extends StatefulWidget {
- Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  void getStuff() async {
-    Map data = await getWeather(util.defaultCity);
-    // print(data);
+  // void getStuff() async {
+  //   Map data = await getWeather(util.defaultCity);
+  //   // print(data);
+  // }
+
+  var temp;
+
+  Future<Map> getWeather(String city) async {
+    String apiUrl =
+        "https://api.openweathermap.org/data/2.5/weather?q=$city&appid=${util.appId}&units=metric";
+
+    Response response = await get(Uri.parse(apiUrl));
+    var result = jsonDecode(response.body);
+    setState(() {
+      this.temp = result['main']['temp'];
+    });
+    return result;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this.getWeather("Bangalore");
   }
 
   @override
@@ -24,9 +44,7 @@ class _HomeState extends State<Home> {
         title: Text('Weather App'),
         centerTitle: true,
         backgroundColor: Colors.redAccent,
-        actions: [
-          IconButton(onPressed: getStuff, icon: Icon(Icons.menu))
-        ],
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.menu))],
       ),
       body: Stack(
         children: [
@@ -52,55 +70,52 @@ class _HomeState extends State<Home> {
           Container(
             // alignment: Alignment.center,
             margin: const EdgeInsets.fromLTRB(80.0, 450.0, 0.0, 0.0),
-            child: updateTempWidget("Bengaluru"),
+            // child: updateTempWidget("Bengaluru"),
+            child: Text(
+              temp.toString(),
+              style: weatherStyle(),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Future<Map> getWeather(String city) async {
-    String apiUrl =
-        "https://api.openweathermap.org/data/2.5/weather?q=$city&appid=${util.appId}&units=metric";
+//   Widget updateTempWidget(String city) {
+//     return FutureBuilder(
+//       future: getWeather(city),
+//       builder: ((BuildContext context, AsyncSnapshot<Map> snapshot) {
+//         if (snapshot.hasData) {
+//           Map? content = snapshot.data;
+//           return Column(
+//             children: [
+//               ListTile(
+//                 title: Text(content!['main']['temp'].toString()),
+//               )
+//             ],
+//           );
+//         } else {
+//           return Container();
+//         }
+//       }),
+//     );
+//   }
+// }
 
-    Response response = await get(Uri.parse(apiUrl));
-    return jsonDecode(response.body);
+  TextStyle cityStyle() {
+    return TextStyle(
+        color: Colors.white,
+        fontSize: 22.9,
+        fontStyle: FontStyle.italic,
+        letterSpacing: 2.0,
+        fontWeight: FontWeight.w600);
   }
 
-  Widget updateTempWidget(String city) {
-    return FutureBuilder(
-      future: getWeather(city),
-      builder: ((BuildContext context, AsyncSnapshot<Map> snapshot) {
-        if (snapshot.hasData) {
-          Map? content = snapshot.data;
-          return Column(
-            children: [
-              ListTile(
-                title: Text(content!['main']['temp'].toString()),
-              )
-            ],
-          );
-        } else {
-          return Container();
-        }
-      }),
-    );
+  TextStyle weatherStyle() {
+    return TextStyle(
+        color: Colors.white,
+        fontSize: 49.9,
+        fontStyle: FontStyle.normal,
+        fontWeight: FontWeight.w500);
   }
-}
-
-TextStyle cityStyle() {
-  return TextStyle(
-      color: Colors.white,
-      fontSize: 22.9,
-      fontStyle: FontStyle.italic,
-      letterSpacing: 2.0,
-      fontWeight: FontWeight.w600);
-}
-
-TextStyle weatherStyle() {
-  return TextStyle(
-      color: Colors.white,
-      fontSize: 49.9,
-      fontStyle: FontStyle.normal,
-      fontWeight: FontWeight.w500);
 }
