@@ -12,12 +12,20 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Future _goToNextScreen(BuildContext context) async {
+    Map results = await Navigator.of(context).push(
+      MaterialPageRoute<dynamic>(builder: (BuildContext context) {
+        return ChangeCity();
+      })
+    );
+  }
+
   // void getStuff() async {
   //   Map data = await getWeather(util.defaultCity);
   //   // print(data);
   // }
 
-  var temp;
+  dynamic temp;
 
   Future<Map> getWeather(String city) async {
     String apiUrl =
@@ -26,7 +34,7 @@ class _HomeState extends State<Home> {
     Response response = await get(Uri.parse(apiUrl));
     var result = jsonDecode(response.body);
     setState(() {
-      this.temp = result['main']['temp'];
+      temp = result['main']['temp'];
     });
     return result;
   }
@@ -34,17 +42,19 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    this.getWeather("Bangalore");
+    getWeather("Bangalore");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Weather App'),
+        title: const Text('Weather App'),
         centerTitle: true,
         backgroundColor: Colors.redAccent,
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.menu))],
+        actions: [IconButton(onPressed: () {
+          _goToNextScreen(context);
+        }, icon: const Icon(Icons.menu))],
       ),
       body: Stack(
         children: [
@@ -69,10 +79,10 @@ class _HomeState extends State<Home> {
           ),
           Container(
             // alignment: Alignment.center,
-            margin: const EdgeInsets.fromLTRB(80.0, 450.0, 0.0, 0.0),
+            margin: const EdgeInsets.fromLTRB(60.0, 460.0, 0.0, 0.0),
             // child: updateTempWidget("Bengaluru"),
             child: Text(
-              temp.toString(),
+              '${temp.toString()} °C',
               style: weatherStyle(),
             ),
           ),
@@ -80,6 +90,7 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+  
 
 //   Widget updateTempWidget(String city) {
 //     return FutureBuilder(
@@ -101,7 +112,7 @@ class _HomeState extends State<Home> {
 //     );
 //   }
 // }
-
+}
   TextStyle cityStyle() {
     return TextStyle(
         color: Colors.white,
@@ -117,5 +128,30 @@ class _HomeState extends State<Home> {
         fontSize: 49.9,
         fontStyle: FontStyle.normal,
         fontWeight: FontWeight.w500);
+  }
+
+
+
+class ChangeCity extends StatelessWidget {
+  const ChangeCity({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Change City'),
+        centerTitle: true,
+      ),
+      body: Stack(
+        children: [
+          Center(
+          child: Image.asset('assets/white_snow.png'
+          , height: 1200.0,
+          width: 580.0,
+          fit: BoxFit.fill,),
+        ),
+        ] 
+      ),
+    );
   }
 }
